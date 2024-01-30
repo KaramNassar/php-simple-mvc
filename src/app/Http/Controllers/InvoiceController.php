@@ -4,27 +4,26 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Core\View;
+
 class InvoiceController
 {
 
-    public function index(): void
+    public function index(): View
     {
-        echo 'Invoices';
+        return View::make('/invoices/index')->layout('app');
     }
 
-    public function create(): void
+    public function create(): View
     {
-        echo <<<Form
-                <form action="\invoice" method="post">
-                <label for="amount">Insert The invoice amount: </label>
-                <input type="text" name="amount" id="amount">
-                </form>
-             Form;
+        return View::make('invoices/create')->layout('app');
     }
 
-    public function store(): void
+    public function store(): View
     {
-        echo 'The amount is: ' . $_POST['amount'];
+        $amount = $_POST['amount'];
+
+        return View::make('invoices/index', compact('amount'))->layout('app');
     }
 
 }
