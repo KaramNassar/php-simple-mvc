@@ -19,8 +19,8 @@ class Router
     }
 
     public function register(
-        string         $method,
-        string         $route,
+        string $method,
+        string $route,
         callable|array $action
     ): static {
         $this->routes[$method][$route] = $action;
