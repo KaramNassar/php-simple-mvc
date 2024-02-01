@@ -2,3 +2,4 @@ src/vendor/
 node_modules/
 .env
 .idea
+docker/storage

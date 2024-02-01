@@ -10,6 +10,9 @@ use App\Http\Controllers\InvoiceController;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../app/Helpers/Functions.php';
 
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load();
+
 const VIEW_PATH = __DIR__ . '/../views';
 
 $router = new Router();
