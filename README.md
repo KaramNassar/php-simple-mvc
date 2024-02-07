@@ -1,2 +1,2 @@
 # simple-mvc
-Build an MVC for educational purposes
+Build a simple PHP MVC framework for educational purposes
