@@ -11,9 +11,13 @@ class Router
 
     private array $routes = [];
 
-    public function get(string $route, callable|array $action): static
+    public function __construct(private readonly Container $container)
     {
-        $this->register('GET', $route, $action);
+    }
+
+    public function post(string $route, callable|array $action): static
+    {
+        $this->register('POST', $route, $action);
 
         return $this;
     }
@@ -24,13 +28,6 @@ class Router
         callable|array $action
     ): static {
         $this->routes[$method][$route] = $action;
-
-        return $this;
-    }
-
-    public function post(string $route, callable|array $action): static
-    {
-        $this->register('POST', $route, $action);
 
         return $this;
     }
@@ -51,7 +48,7 @@ class Router
         [$class, $method] = $action;
 
         if (class_exists($class)) {
-            $class = new $class();
+            $class = $this->container->get($class);
 
             if (method_exists($class, $method)) {
                 return call_user_func_array([$class, $method], []);
@@ -61,8 +58,16 @@ class Router
         throw new RouteNotFoundException();
     }
 
+    public function get(string $route, callable|array $action): static
+    {
+        $this->register('GET', $route, $action);
+
+        return $this;
+    }
+
     public function routes(): array
     {
         return $this->routes;
     }
+
 }

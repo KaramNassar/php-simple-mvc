@@ -8,12 +8,19 @@ use App\Core\View;
 use App\Models\Invoice;
 use App\Models\SignUp;
 use App\Models\User;
+use App\Services\InvoiceService;
 
 class InvoiceController
 {
 
+    public function __construct(protected InvoiceService $invoiceService)
+    {
+    }
+
     public function index(): View
     {
+        $this->invoiceService->process([], 100);
+
         $email    = 'jane@example.com';
         $username = 'jane_doe';
         $amount   = 100;
@@ -32,7 +39,6 @@ class InvoiceController
                 'amount' => $amount,
             ]
         );
-
 
         return View::make('/invoices/index', [
             'invoice' => $invoiceModel->find($invoiceId),
