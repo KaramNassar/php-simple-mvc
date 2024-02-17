@@ -21,7 +21,11 @@ class Container implements ContainerInterface
         if ($this->has($id)) {
             $entry = $this->entries[$id];
 
-            return $entry($this);
+            if (is_callable($entry)) {
+                return $entry($this);
+            }
+
+            $id = $entry;
         }
 
         return $this->resolve($id);
@@ -34,22 +38,18 @@ class Container implements ContainerInterface
 
     private function resolve(string $id)
     {
-        // 1. Inspect the class that we are trying to get from the container
         $reflectionClass = new ReflectionClass($id);
         if ( ! $reflectionClass->isInstantiable()) {
             throw new ContainerException("Class {$id} is not instantiable");
         }
 
-        // 2. Inspect the constructor of the class
-        // 3. Inspect the constructor parameters (dependencies)
-        $constructor = $reflectionClass->getConstructor();
+        $constructor       = $reflectionClass->getConstructor();
         $constructorParams = $constructor?->getParameters();
 
         if ( ! $constructorParams) {
             return new $id();
         }
 
-        // 4. If the constructor parameter is a class try to resolve that class using the container
         $dependencies = array_map(
             function (ReflectionParameter $param) use ($id) {
                 $paramName = $param->getName();
@@ -67,7 +67,9 @@ class Container implements ContainerInterface
                     );
                 }
 
-                if($paramType instanceof ReflectionNamedType && ! $paramType->isBuiltin()){
+                if ($paramType instanceof ReflectionNamedType
+                    && ! $paramType->isBuiltin()
+                ) {
                     return $this->get($paramType->getName());
                 }
 
@@ -81,7 +83,7 @@ class Container implements ContainerInterface
         return $reflectionClass->newInstanceArgs($dependencies);
     }
 
-    public function set(string $id, callable $callable): void
+    public function set(string $id, callable|string $callable): void
     {
         $this->entries[$id] = $callable;
     }

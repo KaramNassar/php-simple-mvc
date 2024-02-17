@@ -6,7 +6,7 @@ namespace Tests\Unit;
 
 use App\Services\EmailService;
 use App\Services\InvoiceService;
-use App\Services\PaymentGatewayService;
+use App\Services\StripePayment;
 use App\Services\SalesTaxService;
 use PHPUnit\Framework\TestCase;
 
@@ -49,7 +49,7 @@ class InvoiceServiceTest extends TestCase
         parent::setUp();
         $salesTaxServiceMock = $this->createMock(SalesTaxService::class);
         $paymentGatewayServiceMock = $this->createMock(
-            PaymentGatewayService::class
+            StripePayment::class
         );
 
         $this->emailServiceMock = $this->createMock(EmailService::class);

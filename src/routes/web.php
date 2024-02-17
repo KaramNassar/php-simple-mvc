@@ -1,11 +1,7 @@
 <?php
 
-use App\Core\Container;
-use App\Core\Router;
 use App\Core\View;
 use App\Http\Controllers\InvoiceController;
-
-$router = new Router(new Container());
 
 $router->get('/', function () {
     return View::make('index')->layout('app');
