@@ -14,7 +14,7 @@ use ReflectionUnionType;
 class Container implements ContainerInterface
 {
 
-    private mixed $entries;
+    private array $entries;
 
     public function get(string $id)
     {

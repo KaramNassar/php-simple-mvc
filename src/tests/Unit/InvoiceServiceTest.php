@@ -6,8 +6,8 @@ namespace Tests\Unit;
 
 use App\Services\EmailService;
 use App\Services\InvoiceService;
-use App\Services\StripePayment;
 use App\Services\SalesTaxService;
+use App\Services\StripePayment;
 use PHPUnit\Framework\TestCase;
 
 class InvoiceServiceTest extends TestCase
@@ -40,14 +40,13 @@ class InvoiceServiceTest extends TestCase
         $amount   = 150;
         $result   = $this->invoiceService->process($customer, $amount);
 
-        // Then assert the invoice was processed successfully
         $this->assertTrue($result);
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        $salesTaxServiceMock = $this->createMock(SalesTaxService::class);
+        $salesTaxServiceMock       = $this->createMock(SalesTaxService::class);
         $paymentGatewayServiceMock = $this->createMock(
             StripePayment::class
         );
