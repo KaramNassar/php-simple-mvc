@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Core\Attributes\Get;
+use App\Core\Attributes\Post;
 use App\Core\View;
 use App\Services\InvoiceService;
 
@@ -14,6 +16,7 @@ class InvoiceController
     {
     }
 
+    #[Get('/invoices')]
     public function index(): View
     {
         $this->invoiceService->process([], 100);
@@ -42,11 +45,13 @@ class InvoiceController
         ])->layout('app');
     }
 
+    #[Get('/invoices/create')]
     public function create(): View
     {
         return View::make('invoices/create')->layout('app');
     }
 
+    #[Post('/invoices')]
     public function store(): View
     {
         $amount = $_POST['amount'];
