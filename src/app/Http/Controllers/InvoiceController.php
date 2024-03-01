@@ -6,7 +6,9 @@ namespace App\Http\Controllers;
 
 use App\Core\Attributes\Get;
 use App\Core\Attributes\Post;
+use App\Core\Attributes\Put;
 use App\Core\View;
+use App\Models\Invoice;
 use App\Services\InvoiceService;
 
 class InvoiceController
@@ -57,6 +59,20 @@ class InvoiceController
         $amount = $_POST['amount'];
 
         return View::make('invoices/index', compact('amount'))->layout('app');
+    }
+
+    #[Get('/invoices/edit')]
+    public function edit(int $id = 1): View
+    {
+        $invoiceModel = (new Invoice())->find($id);
+
+        return View::make('invoices/edit')->layout('app');
+    }
+
+    #[Put('/invoices')]
+    public function update(): string
+    {
+        return 'Invoice has been updated';
     }
 
 }

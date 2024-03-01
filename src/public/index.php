@@ -24,7 +24,7 @@ require_once __DIR__ . '/../routes/web.php';
     $container,
     $router, [
     'uri'    => $_SERVER['REQUEST_URI'],
-    'method' => $_SERVER['REQUEST_METHOD'],
+    'method' => $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'],
 ],
     new Config($_ENV)
 ))->run();
