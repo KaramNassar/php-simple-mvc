@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Attributes;
+namespace App\Attributes;
 
-use App\Core\Enums\HttpMethod;
+use App\Enums\HttpMethod;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
-class Post extends Route
+class Put extends Route
 {
 
     public function __construct(string $path)
     {
-        parent::__construct($path, HttpMethod::Post);
+        parent::__construct($path, HttpMethod::Put);
     }
 
 }

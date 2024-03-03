@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Core\Attributes\Get;
-use App\Core\Attributes\Post;
+use App\Attributes\Get;
+use App\Attributes\Post;
 use App\Core\View;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;

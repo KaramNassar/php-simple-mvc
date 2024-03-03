@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-use App\Core\Attributes\Route;
+use App\Attributes\Route;
 use App\Exceptions\RouteNotFoundException;
 use ReflectionAttribute;
 use ReflectionClass;

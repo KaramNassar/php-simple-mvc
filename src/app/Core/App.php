@@ -6,6 +6,7 @@ namespace App\Core;
 
 use App\Contracts\PaymentGatewayInterface;
 use App\Exceptions\RouteNotFoundException;
+use App\Services\CustomMailer;
 use App\Services\PaddlePayment;
 use Symfony\Component\Mailer\MailerInterface;
 

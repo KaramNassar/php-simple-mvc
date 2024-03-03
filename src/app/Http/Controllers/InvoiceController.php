@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Core\Attributes\Get;
-use App\Core\Attributes\Post;
-use App\Core\Attributes\Put;
+use App\Attributes\Get;
+use App\Attributes\Post;
+use App\Attributes\Put;
 use App\Core\View;
 use App\Models\Invoice;
 use App\Services\InvoiceService;
