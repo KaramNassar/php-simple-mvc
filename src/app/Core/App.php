@@ -7,6 +7,7 @@ namespace App\Core;
 use App\Contracts\PaymentGatewayInterface;
 use App\Exceptions\RouteNotFoundException;
 use App\Services\PaddlePayment;
+use Symfony\Component\Mailer\MailerInterface;
 
 class App
 {
@@ -24,6 +25,11 @@ class App
         $this->container->set(
             PaymentGatewayInterface::class,
             PaddlePayment::class
+        );
+
+        $this->container->set(
+            MailerInterface::class,
+            fn() => new CustomMailer($config->mailer['dsn'])
         );
     }
 

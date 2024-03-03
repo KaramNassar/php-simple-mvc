@@ -4,11 +4,13 @@ use App\Core\Router;
 use App\Core\View;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\UserController;
 
 /** @var Router $router */
 $router->registerRoutesFromControllerAttributes([
     HomeController::class,
     InvoiceController::class,
+    UserController::class
 ]);
 
 //
