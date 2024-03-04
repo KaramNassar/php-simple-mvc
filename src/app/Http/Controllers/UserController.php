@@ -7,15 +7,11 @@ namespace App\Http\Controllers;
 use App\Attributes\Get;
 use App\Attributes\Post;
 use App\Core\View;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use App\Models\Email;
+use Symfony\Component\Mime\Address;
 
 class UserController
 {
-
-    public function __construct(protected MailerInterface $mailer)
-    {
-    }
 
     #[Get('/users/create')]
     public function create(): View
@@ -29,20 +25,19 @@ class UserController
         $name  = $_POST['name'];
         $email = $_POST['email'];
 
-        $html =  View::make('emails/welcome', [
-            'name' => $name
+        $html = View::make('emails/welcome', [
+            'name' => $name,
         ])->render();
 
         $text = strip_tags($html);
 
-        $emailObject = (new Email())
-            ->from('support@example.com')
-            ->to($email)
-            ->subject('Welcome!')
-            ->html($html)
-            ->text($text);
-
-        $this->mailer->send($emailObject);
+        (new Email())->queue(
+            new Address($email),
+            new Address('Support@example.com', 'Support'),
+            'Welcome',
+            $html,
+            $text
+        );
     }
 
 }

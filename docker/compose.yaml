@@ -37,3 +37,10 @@ services:
     ports:
       - "8025:8025"
       - "1025:1025"
+
+  cron:
+    container_name: cron_container
+    build: ./cron
+    volumes:
+      - ../src:/var/www
+      - ./log/cron:/var/log/cron
