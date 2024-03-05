@@ -8,6 +8,7 @@ use App\Attributes\Get;
 use App\Attributes\Post;
 use App\Core\View;
 use App\Models\Email;
+use App\Models\User;
 use Symfony\Component\Mime\Address;
 
 class UserController
@@ -24,6 +25,10 @@ class UserController
     {
         $name  = $_POST['name'];
         $email = $_POST['email'];
+
+        $userModel = new User();
+
+        $userModel->create($name, $email);
 
         $html = View::make('emails/welcome', [
             'name' => $name,

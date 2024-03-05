@@ -23,18 +23,18 @@ class EmailService
         $emails = $this->emailModel->getEmailByStatus(EmailStatus::Queue);
 
         foreach ($emails as $email) {
-            $meta = json_decode($email->meta, true);
+            $meta = json_decode($email['meta'], true);
 
             $emailMessage = (new Email())
                 ->from($meta['from'])
                 ->to($meta['to'])
-                ->subject($email->subject)
-                ->html($email->html_body)
-                ->text($email->text_body);
+                ->subject($email['subject'])
+                ->html($email['html_body'])
+                ->text($email['text_body']);
 
             $this->mailer->send($emailMessage);
 
-            $this->emailModel->markEmailSent($email->id);
+            $this->emailModel->markEmailSent($email['id']);
         }
     }
 

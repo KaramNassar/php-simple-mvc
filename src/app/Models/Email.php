@@ -6,7 +6,6 @@ namespace App\Models;
 
 use App\Core\Model;
 use App\Enums\EmailStatus;
-use PDO;
 use Symfony\Component\Mime\Address;
 
 class Email extends Model
@@ -19,49 +18,47 @@ class Email extends Model
         string $html,
         ?string $text = null
     ): void {
-        $stmt = $this->db->prepare(
-            'INSERT INTO emails (subject, status, text_body, html_body, meta, created_at)
-           VALUES (?, ?, ?, ?, ?, NOW())'
-        );
-
         $meta['to']   = $to->toString();
         $meta['from'] = $from->toString();
 
-        $stmt->execute([
-            $subject,
-            EmailStatus::Queue->value,
-            $text,
-            $html,
-            json_encode($meta),
-        ]);
+        $this->queryBuilder
+            ->insert('emails')
+            ->values([
+                'subject'    => '?',
+                'status'     => '?',
+                'text_body'  => '?',
+                'html_body'  => '?',
+                'meta'       => '?',
+                'created_at' => 'NOW()',
+            ])
+            ->setParameter(0, $subject)
+            ->setParameter(1, EmailStatus::Queue->value)
+            ->setParameter(2, $text)
+            ->setParameter(3, $html)
+            ->setParameter(4, json_encode($meta))
+            ->executeQuery();
     }
 
     public function getEmailByStatus(EmailStatus $status): array
     {
-        $stmt = $this->db->prepare(
-            'SELECT * 
-             FROM emails 
-             WHERE status = ?'
-        );
-
-        $stmt->execute([$status->value]);
-
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $this->queryBuilder
+            ->select('*')
+            ->from('emails')
+            ->where('status = ?')
+            ->setParameter(0, $status->value)
+            ->fetchAllAssociative();
     }
 
     public function markEmailSent($id): void
     {
-        $stmt = $this->db->prepare(
-            'UPDATE emails
-            SET status = ?,
-                sent_at = NOW()
-            WHERE id = ?'
-        );
-
-        $stmt->execute([
-           EmailStatus::Sent->value,
-           $id
-        ]);
+        $this->queryBuilder
+            ->update('emails')
+            ->set('status', '?')
+            ->set('sent_at', 'NOW()')
+            ->setParameter(0, EmailStatus::Sent->value)
+            ->setParameter(1, $id)
+            ->where('id = ?')
+            ->executeQuery();
     }
 
 }

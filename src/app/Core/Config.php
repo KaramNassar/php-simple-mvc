@@ -17,11 +17,11 @@ class Config
     {
         $this->config = [
             'db'     => [
-                'host'     => $env['DB_HOST'],
-                'database' => $env['DB_DATABASE'],
-                'username' => $env['DB_USERNAME'],
+                'dbname' => $env['DB_DATABASE'],
+                'user' => $env['DB_USERNAME'],
                 'password' => $env['DB_PASSWORD'],
-                'driver'   => $env['DB_CONNECTION'] ?? 'mysql',
+                'host'     => $env['DB_HOST'],
+                'driver'   => $env['DB_CONNECTION'] ?? 'pdo_mysql',
             ],
             'mailer' => [
                 'dsn' => "{$env['MAIL_MAILER']}://{$env['MAIL_HOST']}:{$env['MAIL_PORT']}",

@@ -11,11 +11,17 @@ class User extends Model
 
     public function create(string $username, string $email): int
     {
-        $newUserStmt = $this->db->prepare(
-            'INSERT INTO users (username, email, is_active, created_at) VALUES(?, ?, 1, NOW())'
-        );
-
-        $newUserStmt->execute([$username, $email]);
+        $this->queryBuilder
+            ->insert('users')
+            ->values([
+                'username'   => '?',
+                'email'      => '?',
+                'is_active'  => 1,
+                'created_at' => 'Now()',
+            ])
+            ->setParameter(0, $username)
+            ->setParameter(1, $email)
+            ->executeQuery();
 
         return (int)$this->db->lastInsertId();
     }

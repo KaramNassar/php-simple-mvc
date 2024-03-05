@@ -47,18 +47,22 @@ class InvoiceController
         ])->layout('app');
     }
 
+    #[Post('/invoices')]
+    public function store(): View
+    {
+        $amount = (int)$_POST['amount'];
+
+        $invoiceModel = new Invoice();
+
+        $id = $invoiceModel->create(1, $amount);
+
+        return View::make('invoices/index', compact('id'))->layout('app');
+    }
+
     #[Get('/invoices/create')]
     public function create(): View
     {
         return View::make('invoices/create')->layout('app');
-    }
-
-    #[Post('/invoices')]
-    public function store(): View
-    {
-        $amount = $_POST['amount'];
-
-        return View::make('invoices/index', compact('amount'))->layout('app');
     }
 
     #[Get('/invoices/edit')]
@@ -66,7 +70,9 @@ class InvoiceController
     {
         $invoiceModel = (new Invoice())->find($id);
 
-        return View::make('invoices/edit')->layout('app');
+        return View::make('invoices/edit', [
+            'amount' => $invoiceModel['amount'],
+        ])->layout('app');
     }
 
     #[Put('/invoices')]
