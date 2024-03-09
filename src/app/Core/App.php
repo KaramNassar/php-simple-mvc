@@ -8,6 +8,9 @@ use App\Contracts\PaymentGatewayInterface;
 use App\Exceptions\RouteNotFoundException;
 use App\Services\CustomMailer;
 use App\Services\PaddlePayment;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMSetup;
 use Dotenv\Dotenv;
 use Symfony\Component\Mailer\MailerInterface;
 
@@ -15,6 +18,7 @@ class App
 {
 
     protected static DB $db;
+    protected static EntityManager $entityManager;
     protected Config $config;
 
     public function __construct(
@@ -27,6 +31,11 @@ class App
     public static function db(): DB
     {
         return static::$db;
+    }
+
+    public static function entityManager(): EntityManager
+    {
+        return static::$entityManager;
     }
 
     public function run(): void
@@ -58,6 +67,12 @@ class App
         $this->container->set(
             MailerInterface::class,
             fn() => new CustomMailer($this->config->mailer['dsn'])
+        );
+
+        static::$entityManager = new EntityManager(
+            DriverManager::getConnection($this->config->db),
+            ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Entity']
+            )
         );
 
         return $this;

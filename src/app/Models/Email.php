@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Core\App;
 use App\Core\Model;
 use App\Enums\EmailStatus;
+use DateTime;
 use Symfony\Component\Mime\Address;
 
 class Email extends Model
@@ -21,44 +23,38 @@ class Email extends Model
         $meta['to']   = $to->toString();
         $meta['from'] = $from->toString();
 
-        $this->queryBuilder
-            ->insert('emails')
-            ->values([
-                'subject'    => '?',
-                'status'     => '?',
-                'text_body'  => '?',
-                'html_body'  => '?',
-                'meta'       => '?',
-                'created_at' => 'NOW()',
-            ])
-            ->setParameter(0, $subject)
-            ->setParameter(1, EmailStatus::Queue->value)
-            ->setParameter(2, $text)
-            ->setParameter(3, $html)
-            ->setParameter(4, json_encode($meta))
-            ->executeQuery();
+        $email = (new \App\Entity\Email())
+            ->setSubject($subject)
+            ->setStatus(EmailStatus::Queue)
+            ->setTextBody($text)
+            ->setHtmlBody($html)
+            ->setMeta($meta);
+
+        App::entityManager()->persist($email);
+        App::entityManager()->flush();
     }
 
     public function getEmailByStatus(EmailStatus $status): array
     {
-        return $this->queryBuilder
-            ->select('*')
-            ->from('emails')
-            ->where('status = ?')
-            ->setParameter(0, $status->value)
-            ->fetchAllAssociative();
+        $queryBuilder = App::entityManager()->createQueryBuilder();
+
+        return $queryBuilder
+            ->select('e')
+            ->from(\App\Entity\Email::class, 'e')
+            ->where('e.status = :status')
+            ->setParameter('status', $status->value)
+            ->getQuery()
+            ->getArrayResult();
     }
 
     public function markEmailSent($id): void
     {
-        $this->queryBuilder
-            ->update('emails')
-            ->set('status', '?')
-            ->set('sent_at', 'NOW()')
-            ->setParameter(0, EmailStatus::Sent->value)
-            ->setParameter(1, $id)
-            ->where('id = ?')
-            ->executeQuery();
+        $email = App::entityManager()->find(\App\Entity\Email::class, $id);
+
+        $email->setStatus(EmailStatus::Sent);
+        $email->setSentAt(new DateTime());
+
+        App::entityManager()->flush();
     }
 
 }

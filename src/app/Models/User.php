@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Core\App;
 use App\Core\Model;
 
 class User extends Model
@@ -11,19 +12,15 @@ class User extends Model
 
     public function create(string $username, string $email): int
     {
-        $this->queryBuilder
-            ->insert('users')
-            ->values([
-                'username'   => '?',
-                'email'      => '?',
-                'is_active'  => 1,
-                'created_at' => 'Now()',
-            ])
-            ->setParameter(0, $username)
-            ->setParameter(1, $email)
-            ->executeQuery();
+        $user = (new \App\Entity\User())
+            ->setUsername($username)
+            ->setEmail($email)
+            ->setIsActive(true);
 
-        return (int)$this->db->lastInsertId();
+        App::entityManager()->persist($user);
+        App::entityManager()->flush();
+
+        return $user->getId();
     }
 
 }
